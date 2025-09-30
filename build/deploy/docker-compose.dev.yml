@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  techcorp-inventory:
+    build:
+      context: ../app
+      dockerfile: Dockerfile
+    volumes:
+      - ../app:/app
+      - inventory_data:/app/data
+    command: python /app/app.py
+    ports:
+      - "3206:3206"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - DATABASE_PATH=/app/data/techcorp.db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3206/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+volumes:
+  inventory_data:
+    driver: local

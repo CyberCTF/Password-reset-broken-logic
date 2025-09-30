@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel - TechCorp Inventory System{% endblock %}
+
+{% block content %}
+<div class="min-h-screen gradient-bg">
+    <div class="container mx-auto px-4 py-8">
+        <div class="glass rounded-2xl p-8 max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-white">
+                    <i class="fas fa-users-cog mr-3 text-blue-400"></i>
+                    Administration Panel
+                </h1>
+                <a href="{{ url_for('dashboard') }}" class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded-lg transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                </a>
+            </div>
+
+            <!-- Users Management Section -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-white mb-6">
+                    <i class="fas fa-users mr-2 text-green-400"></i>
+                    User Management
+                </h2>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-300">
+                        <thead class="text-xs text-gray-400 uppercase bg-gray-700/50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">User</th>
+                                <th scope="col" class="px-6 py-3">Contact</th>
+                                <th scope="col" class="px-6 py-3">Personal Info</th>
+                                <th scope="col" class="px-6 py-3">Address</th>
+                                <th scope="col" class="px-6 py-3">Role</th>
+                                <th scope="col" class="px-6 py-3">Created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr class="bg-gray-800/30 border-b border-gray-700 hover:bg-gray-700/30 transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-semibold mr-3">
+                                            {{ user.first_name[0] if user.first_name else user.username[0].upper() }}{{ user.last_name[0] if user.last_name else '' }}
+                                        </div>
+                                        <div>
+                                            <div class="font-medium text-white">{{ user.username }}</div>
+                                            {% if user.first_name and user.last_name %}
+                                            <div class="text-sm text-gray-400">{{ user.first_name }} {{ user.last_name }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-white">
+                                        <div class="flex items-center mb-1">
+                                            <i class="fas fa-envelope text-blue-400 mr-2 w-4"></i>
+                                            {{ user.email }}
+                                        </div>
+                                        {% if user.phone %}
+                                        <div class="flex items-center text-sm text-gray-300">
+                                            <i class="fas fa-phone text-green-400 mr-2 w-4"></i>
+                                            {{ user.phone }}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    {% if user.first_name %}
+                                    <div class="text-white">
+                                        <div class="font-medium">{{ user.first_name }} {{ user.last_name }}</div>
+                                        <div class="text-sm text-gray-400">ID: {{ user.id }}</div>
+                                    </div>
+                                    {% else %}
+                                    <div class="text-gray-400 text-sm">No personal info</div>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {% if user.address %}
+                                    <div class="text-white text-sm">
+                                        <div class="flex items-start mb-1">
+                                            <i class="fas fa-map-marker-alt text-red-400 mr-2 mt-0.5 w-4"></i>
+                                            <div>
+                                                <div>{{ user.address }}</div>
+                                                <div class="text-gray-300">{{ user.postal_code }} {{ user.city }}</div>
+                                                {% if user.country %}
+                                                <div class="text-gray-400">{{ user.country }}</div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="text-gray-400 text-sm">No address</div>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {% if user.role == 'admin' %}
+                                    <span class="bg-red-500/20 text-red-300 text-xs font-medium px-2.5 py-0.5 rounded-full border border-red-500/30">
+                                        <i class="fas fa-crown mr-1"></i>{{ user.role.title() }}
+                                    </span>
+                                    {% elif user.role == 'manager' %}
+                                    <span class="bg-blue-500/20 text-blue-300 text-xs font-medium px-2.5 py-0.5 rounded-full border border-blue-500/30">
+                                        <i class="fas fa-user-tie mr-1"></i>{{ user.role.title() }}
+                                    </span>
+                                    {% elif user.role == 'hr' %}
+                                    <span class="bg-purple-500/20 text-purple-300 text-xs font-medium px-2.5 py-0.5 rounded-full border border-purple-500/30">
+                                        <i class="fas fa-users mr-1"></i>{{ user.role.upper() }}
+                                    </span>
+                                    {% elif user.role == 'supervisor' %}
+                                    <span class="bg-orange-500/20 text-orange-300 text-xs font-medium px-2.5 py-0.5 rounded-full border border-orange-500/30">
+                                        <i class="fas fa-user-check mr-1"></i>{{ user.role.title() }}
+                                    </span>
+                                    {% else %}
+                                    <span class="bg-gray-500/20 text-gray-300 text-xs font-medium px-2.5 py-0.5 rounded-full border border-gray-500/30">
+                                        <i class="fas fa-user mr-1"></i>{{ user.role.title() }}
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-400">
+                                    {{ user.created_at.strftime('%Y-%m-%d') if user.created_at else 'Unknown' }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="glass rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold text-blue-400 mb-2">{{ users|length }}</div>
+                    <div class="text-gray-300 text-sm">Total Users</div>
+                </div>
+                <div class="glass rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold text-green-400 mb-2">{{ users|selectattr('role', 'equalto', 'admin')|list|length }}</div>
+                    <div class="text-gray-300 text-sm">Administrators</div>
+                </div>
+                <div class="glass rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold text-purple-400 mb-2">{{ users|selectattr('role', 'equalto', 'manager')|list|length }}</div>
+                    <div class="text-gray-300 text-sm">Managers</div>
+                </div>
+                <div class="glass rounded-xl p-6 text-center">
+                    <div class="text-3xl font-bold text-orange-400 mb-2">{{ users|selectattr('role', 'equalto', 'employee')|list|length }}</div>
+                    <div class="text-gray-300 text-sm">Employees</div>
+                </div>
+            </div>
+
+            <!-- Admin Tools -->
+            <div class="glass rounded-xl p-6">
+                <h3 class="text-xl font-semibold text-white mb-4">
+                    <i class="fas fa-tools mr-2 text-yellow-400"></i>
+                    Admin Tools
+                </h3>
+                <div class="flex flex-wrap gap-4">
+                    <button class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-user-plus mr-2"></i>Add User
+                    </button>
+                    <button class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-file-export mr-2"></i>Export Data
+                    </button>
+                    <button class="bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-cog mr-2"></i>System Settings
+                    </button>
+                    <button class="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-shield-alt mr-2"></i>Security Logs
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
