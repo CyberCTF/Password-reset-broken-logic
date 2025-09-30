@@ -1,32 +1,43 @@
-# TechCorp Inventory System - Password Reset Vulnerability Lab
+# TechCorp Inventory System: Password Reset Broken Logic
+Docker Flask Python
 
-🎯 **Cybersecurity Training Environment**
+**Difficulty**: 🟡 **APPRENTICE** | **Category**: Authentication | **Estimated Time**: 15-30 minutes
 
-A professional-grade vulnerable web application designed for cybersecurity education, featuring a realistic password reset vulnerability that demonstrates authentication bypass techniques.
-
-## 🏢 Application Overview
-
-**TechCorp Inventory System** is a corporate asset management platform with:
-
-- **Professional Interface**: Modern dark theme with responsive design
-- **Role-Based Access Control**: Admin, Manager, HR, Employee, Supervisor roles
-- **Real Business Logic**: Inventory tracking, user management, and authentication
-- **Vulnerable Password Reset**: Intentional security flaw for educational purposes
-
-## 🎓 Learning Objectives
-
-This training lab teaches:
-- **Password Reset Vulnerabilities**: Token validation bypass and parameter manipulation
-- **Authorization Flaws**: Missing validation leading to privilege escalation
-- **Manual & Automated Testing**: Using tools like Burp Suite and Python scripts
-- **Security Best Practices**: Proper authentication mechanism implementation
+## 🎯 Challenge Overview
+This lab demonstrates a critical vulnerability in a corporate inventory management system where the password reset mechanism contains broken authentication logic. The application allows attackers to bypass token validation and change any user's password, leading to complete account takeover.
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- **Docker & Docker Compose** installed
+### Using Docker
+```bash
+docker pull cyberctf/password-reset-broken-logic:latest
+docker run -d -p 3206:3206 cyberctf/password-reset-broken-logic:latest
+```
+
+### Using Docker Compose
+```bash
+docker-compose up -d
+```
+
+**Access**: http://localhost:3206
+
+## 📚 Learning Objectives
+✅ Identify password reset vulnerabilities through parameter manipulation  
+✅ Exploit token validation bypass to target administrator accounts  
+✅ Perform account takeover and privilege escalation  
+✅ Access admin dashboard with personal data to retrieve sensitive information
+
+## 🛠️ Prerequisites
+- Basic understanding of HTTP requests and responses
+- Familiarity with Burp Suite or similar proxy tools
+- Knowledge of authentication mechanisms and session management
+
+## � Tools Recommended
+- **Burp Suite** Community/Professional
 - **Web browser** (Chrome/Firefox recommended)
-- **Burp Suite** (optional, for manual exploitation)
+- **Python** (for automated exploitation scripts)
+
+## 🎓 CyberCTF - Cybersecurity Training Platform
 
 ### 🐳 Docker Hub Deployment (Recommended)
 
