@@ -80,6 +80,63 @@ def login():
     
     return render_template('login.html')
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        
+        # Validation
+        if not username or not password:
+            flash('Username and password are required', 'error')
+            return render_template('register.html')
+        
+        if password != confirm_password:
+            flash('Passwords do not match', 'error')
+            return render_template('register.html')
+        
+        if len(password) < 6:
+            flash('Password must be at least 6 characters long', 'error')
+            return render_template('register.html')
+        
+        db = get_db()
+        
+        # Check if username already exists
+        existing_user = db.execute(
+            'SELECT username FROM users WHERE username = ?', 
+            (username,)
+        ).fetchone()
+        
+        if existing_user:
+            db.close()
+            flash('Username already exists', 'error')
+            return render_template('register.html')
+        
+        # Create new user
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+        # Generate a unique email using username + timestamp to avoid UNIQUE constraint issues
+        import time
+        unique_email = f"{username}_{int(time.time())}@techcorp.local"
+        try:
+            db.execute(
+                '''INSERT INTO users (username, email, password, first_name, last_name, role, 
+                   phone, address, city, postal_code, country, created_at) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                (username, unique_email, hashed_password, '', '', 'employee',
+                 '', '', '', '', '', datetime.now())
+            )
+            db.commit()
+            db.close()
+            flash('Account created successfully! You can now log in.', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            db.close()
+            flash('An error occurred while creating your account', 'error')
+            return render_template('register.html')
+    
+    return render_template('register.html')
+
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' not in session:
@@ -118,16 +175,12 @@ def inventory():
 def forgot_password():
     if request.method == 'POST':
         username = request.form['username']
-        
-        # Seul jennifer.morgan peut utiliser forgot password
-        if username != 'jennifer.morgan':
-            flash('Password reset is only available for your account (jennifer.morgan)', 'error')
-            return render_template('forgot_password.html')
+        current_password = request.form['current_password']
         
         db = get_db()
         user = db.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
         
-        if user:
+        if user and user['password'] == hashlib.sha256(current_password.encode()).hexdigest():
             token = str(uuid.uuid4())
             db.execute(
                 'INSERT INTO password_reset_tokens (username, token) VALUES (?, ?)',
@@ -140,7 +193,7 @@ def forgot_password():
             return redirect(url_for('reset_password') + f'?temp-forgot-password-token={token}')
         else:
             db.close()
-            flash('User not found', 'error')
+            flash('Invalid username or current password', 'error')
     
     return render_template('forgot_password.html')
 

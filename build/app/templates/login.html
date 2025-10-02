@@ -4,100 +4,33 @@
 
 {% block content %}
 <div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-    <!-- Users List Header -->
-    <div class="max-w-4xl mx-auto mb-8">
-        <div class="glass rounded-xl p-6">
-            <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-                <i class="fas fa-users mr-3 text-blue-400"></i>
-                System Users
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div class="bg-white/5 rounded-lg p-4 border border-white/10">
-                    <div class="flex items-center">
-                        <div class="bg-green-500/20 p-2 rounded-full mr-3">
-                            <i class="fas fa-user text-green-400"></i>
-                        </div>
-                        <div>
-                            <p class="text-white font-medium">jennifer.morgan (You)</p>
-                            <p class="text-gray-400 text-sm">Manager</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white/5 rounded-lg p-4 border border-white/10">
-                    <div class="flex items-center">
-                        <div class="bg-red-500/20 p-2 rounded-full mr-3">
-                            <i class="fas fa-user-shield text-red-400"></i>
-                        </div>
-                        <div>
-                            <p class="text-white font-medium">admin</p>
-                            <p class="text-gray-400 text-sm">Administrator</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white/5 rounded-lg p-4 border border-white/10">
-                    <div class="flex items-center">
-                        <div class="bg-blue-500/20 p-2 rounded-full mr-3">
-                            <i class="fas fa-user text-blue-400"></i>
-                        </div>
-                        <div>
-                            <p class="text-white font-medium">david.chen</p>
-                            <p class="text-gray-400 text-sm">Employee</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white/5 rounded-lg p-4 border border-white/10">
-                    <div class="flex items-center">
-                        <div class="bg-purple-500/20 p-2 rounded-full mr-3">
-                            <i class="fas fa-user text-purple-400"></i>
-                        </div>
-                        <div>
-                            <p class="text-white font-medium">sarah.wilson</p>
-                            <p class="text-gray-400 text-sm">HR</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white/5 rounded-lg p-4 border border-white/10">
-                    <div class="flex items-center">
-                        <div class="bg-yellow-500/20 p-2 rounded-full mr-3">
-                            <i class="fas fa-user text-yellow-400"></i>
-                        </div>
-                        <div>
-                            <p class="text-white font-medium">michael.torres</p>
-                            <p class="text-gray-400 text-sm">Employee</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white/5 rounded-lg p-4 border border-white/10">
-                    <div class="flex items-center">
-                        <div class="bg-orange-500/20 p-2 rounded-full mr-3">
-                            <i class="fas fa-user text-orange-400"></i>
-                        </div>
-                        <div>
-                            <p class="text-white font-medium">lisa.parker</p>
-                            <p class="text-gray-400 text-sm">Supervisor</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Login Form -->
     <div class="max-w-md mx-auto">
         <div class="text-center mb-8">
             <i class="fas fa-boxes text-6xl text-blue-400 mb-4"></i>
-            <h2 class="text-3xl font-extrabold">TechCorp Inventory</h2>
+            <h2 class="text-3xl font-extrabold text-white">TechCorp Inventory</h2>
             <p class="mt-2 text-gray-400">Sign in to your account</p>
         </div>
         
         <div class="glass rounded-xl p-8">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="mb-6 p-4 rounded-lg {% if category == 'error' %}bg-red-500/20 text-red-300 border border-red-500/30{% elif category == 'success' %}bg-green-500/20 text-green-300 border border-green-500/30{% else %}bg-blue-500/20 text-blue-300 border border-blue-500/30{% endif %}">
+                            <i class="fas {% if category == 'error' %}fa-exclamation-triangle{% elif category == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %} mr-2"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
             <form class="space-y-6" method="POST">
                 <div>
                     <label for="username" class="block text-sm font-medium text-gray-300 mb-2">
                         <i class="fas fa-user mr-2"></i>Username
                     </label>
                     <input id="username" name="username" type="text" required 
-                           class="appearance-none relative block w-full px-3 py-3 border border-white/10 placeholder-gray-500 text-white rounded-lg bg-white/5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                           class="dark-input input-focus appearance-none relative block w-full px-3 py-3 placeholder-gray-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                            placeholder="Enter your username">
                 </div>
                 
@@ -106,14 +39,14 @@
                         <i class="fas fa-lock mr-2"></i>Password
                     </label>
                     <input id="password" name="password" type="password" required 
-                           class="appearance-none relative block w-full px-3 py-3 border border-white/10 placeholder-gray-500 text-white rounded-lg bg-white/5 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                           class="dark-input input-focus appearance-none relative block w-full px-3 py-3 placeholder-gray-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                            placeholder="Enter your password">
                 </div>
                 
                 <div class="flex items-center justify-between">
                     <div class="text-sm">
                         <a href="{{ url_for('forgot_password') }}" class="text-blue-400 hover:text-blue-300 transition-colors">
-                            Forgot your password?
+                            <i class="fas fa-key mr-1"></i>Forgot your password?
                         </a>
                     </div>
                 </div>
@@ -124,6 +57,15 @@
                         <i class="fas fa-sign-in-alt mr-2"></i>
                         Sign in
                     </button>
+                </div>
+                
+                <div class="text-center">
+                    <p class="text-gray-400 text-sm">
+                        Don't have an account?
+                        <a href="{{ url_for('register') }}" class="text-emerald-400 hover:text-emerald-300 transition-colors font-medium">
+                            <i class="fas fa-user-plus mr-1"></i>Create one here
+                        </a>
+                    </p>
                 </div>
             </form>
         </div>
